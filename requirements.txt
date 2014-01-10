@@ -1,0 +1,14 @@
+Django==1.6.1
+Jinja2==2.7.1
+MarkupSafe==0.18
+argparse==1.2.1
+django-admin-bootstrapped==1.6.3
+django-assets==0.8
+django-bootstrap3==2.5.2
+django-jinja==0.23.1
+django-proxy==1.0.2
+etherpad-lite==0.2
+requests==2.1.0
+webassets==0.8
+wsgiref==0.1.2
+xmpppy==0.5.0rc1

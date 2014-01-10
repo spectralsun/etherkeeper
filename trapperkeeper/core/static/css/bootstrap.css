@@ -1,0 +1,37 @@
+
+.modal-header {
+    background-color: #428BCA;
+    border-color: #357EBD;
+    color: #FFFFFF;
+    padding: 0px;
+}
+
+.modal-header h4 {
+    padding: 5px;
+    text-align: center;
+}
+
+.modal-close {
+    float: right;
+    padding: 8px;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+}
+.modal-close .glyphicon {
+    top: 3px;
+}
+.modal-content {
+    overflow: hidden;
+}
+
+.modal-footer {
+    padding: 7px;
+    border: none;
+}
+
+@media (min-width: 700px) {
+    #login_modal .modal-dialog {
+        width: 360px;
+    }
+}

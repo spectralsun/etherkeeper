@@ -1,0 +1,31 @@
+<div class="modal fade {% block modal_class %}{% endblock %}" id="{% block modal_id %}{% endblock %}_modal" tabindex="-1" role="dialog" aria-hidden="true" {% block modal_data %}{% endblock %}>
+    <div class="modal-dialog">
+     {% block modal_dialog %}
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="modal-close btn btn-primary" data-dismiss="modal" aria-hidden="true">
+            <span class="glyphicon glyphicon-remove"></span>
+          </span>
+          <h4 class="modal-title">{% block modal_title %}{% endblock %}</h4>
+        </div>
+        <div class="modal-body">{% block modal_body %}{% endblock %}</div>
+        <div class="modal-loading">
+          <img src="/static/images/loading.gif" />
+        </div>
+        <div class="modal-footer">
+          {% block modal_buttons %}
+            {% block modal_close %}
+              <div class="btn btn-default" data-dismiss="modal">Close</div>
+            {% endblock %}
+            {% block modal_submit %}
+              <button type="submit" class="btn btn-primary submit">Submit</button>
+            {% endblock %}
+              <div class="modal-submitting">
+                <img src="/spirits/static/images/loading_small.gif" />
+              </div>
+          {% endblock %}
+        </div>
+      </div><!-- /.modal-content -->
+      {% endblock %}
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->

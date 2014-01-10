@@ -1,0 +1,13 @@
+#search {
+    position: absolute;
+    left: 50%;
+    margin-left: -210px;
+    width: 420px;
+    top: 50%;
+    margin-top: -34px;
+
+}
+
+#search input {
+    margin-bottom: 7px;
+}
