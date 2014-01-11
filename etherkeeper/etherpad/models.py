@@ -6,17 +6,19 @@ class Pad(models.Model):
     padid = models.CharField(max_length=42)
     groupid = models.CharField(max_length=42)
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(Author)
-    folder = models.ForeignKey(Folder)
-    tags = models.ManyToMany(Tag)
+    created = models.DateField()
+    
 
-class Share(models.Model):
+class PadAuthor(models.Model):
     class Meta:
         permissions = (
+            ('owner', 'Owner'),
             ('admin', 'Admin'),
             ('write', 'Write'),
             ('read', 'Read')
         )
     pad = models.OneToOneField(Pad)
     role = models.CharField(max_length=10)
-    author = models.ForeignKey(Author)
+    author = models.ForeignKey(Author, null=True)
+    #folder = models.ForeignKey(Folder, null=True)
+    tags = models.ManyToManyField(Tag)

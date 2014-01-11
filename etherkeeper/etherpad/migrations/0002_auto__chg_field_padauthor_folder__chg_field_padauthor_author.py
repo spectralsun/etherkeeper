@@ -8,19 +8,28 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Author'
-        db.create_table(u'core_author', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('etherpad_id', self.gf('django.db.models.fields.CharField')(max_length=42)),
-        ))
-        db.send_create_signal(u'core', ['Author'])
 
+        # Changing field 'PadAuthor.folder'
+        db.alter_column(u'etherpad_padauthor', 'folder_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['organize.Folder'], null=True))
+
+        # Changing field 'PadAuthor.author'
+        db.alter_column(u'etherpad_padauthor', 'author_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Author'
-        db.delete_table(u'core_author')
 
+        # User chose to not deal with backwards NULL issues for 'PadAuthor.folder'
+        raise RuntimeError("Cannot reverse this migration. 'PadAuthor.folder' and its values cannot be restored.")
+        
+        # The following code is provided here to aid in writing a correct migration
+        # Changing field 'PadAuthor.folder'
+        db.alter_column(u'etherpad_padauthor', 'folder_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['organize.Folder']))
+
+        # User chose to not deal with backwards NULL issues for 'PadAuthor.author'
+        raise RuntimeError("Cannot reverse this migration. 'PadAuthor.author' and its values cannot be restored.")
+        
+        # The following code is provided here to aid in writing a correct migration
+        # Changing field 'PadAuthor.author'
+        db.alter_column(u'etherpad_padauthor', 'author_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author']))
 
     models = {
         u'auth.group': {
@@ -64,7 +73,36 @@ class Migration(SchemaMigration):
             'etherpad_id': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
+        u'etherpad.pad': {
+            'Meta': {'object_name': 'Pad'},
+            'groupid': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'padid': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+        },
+        u'etherpad.padauthor': {
+            'Meta': {'object_name': 'PadAuthor'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Author']", 'null': 'True'}),
+            'folder': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['organize.Folder']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'pad': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['etherpad.Pad']", 'unique': 'True'}),
+            'role': ('django.db.models.fields.CharField', [], {'max_length': '10'}),
+            'tags': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['organize.Tag']", 'symmetrical': 'False'})
+        },
+        u'organize.folder': {
+            'Meta': {'object_name': 'Folder'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Author']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['organize.Folder']"})
+        },
+        u'organize.tag': {
+            'Meta': {'object_name': 'Tag'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Author']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         }
     }
 
-    complete_apps = ['core']
+    complete_apps = ['etherpad']

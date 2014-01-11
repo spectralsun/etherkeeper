@@ -8,18 +8,23 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Author'
-        db.create_table(u'core_author', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
-            ('etherpad_id', self.gf('django.db.models.fields.CharField')(max_length=42)),
-        ))
-        db.send_create_signal(u'core', ['Author'])
+        # Adding field 'Folder.author'
+        db.add_column(u'organize_folder', 'author',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True),
+                      keep_default=False)
+
+        # Adding field 'Tag.author'
+        db.add_column(u'organize_tag', 'author',
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'Author'
-        db.delete_table(u'core_author')
+        # Deleting field 'Folder.author'
+        db.delete_column(u'organize_folder', 'author_id')
+
+        # Deleting field 'Tag.author'
+        db.delete_column(u'organize_tag', 'author_id')
 
 
     models = {
@@ -60,11 +65,23 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'core.author': {
-            'Meta': {'object_name': 'Author'},
+            'Meta': {'object_name': 'Author', '_ormbases': [u'auth.User']},
             'etherpad_id': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
+            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'primary_key': 'True'})
+        },
+        u'organize.folder': {
+            'Meta': {'object_name': 'Folder'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Author']", 'null': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['organize.Folder']"})
+        },
+        u'organize.tag': {
+            'Meta': {'object_name': 'Tag'},
+            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Author']", 'null': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         }
     }
 
-    complete_apps = ['core']
+    complete_apps = ['organize']
