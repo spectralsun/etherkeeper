@@ -1,5 +1,6 @@
 import xmpp
 import os
+from random import randint
 from django.conf import settings
 from django.contrib.auth.models import User
 
@@ -8,15 +9,18 @@ class XmppBackend(object):
     def authenticate(self, username, password):
         client = xmpp.Client(settings.XMPP_SERVER, debug=[])
         conn = client.connect()
-        if not con:
-            raise Exception('Could not connect to server')
+        if not conn:
+            return None
         auth = client.auth(username, password)
         if not auth:
-            raise Exception('Invalid Username/Password')
+            return None
         try:
             user = User.objects.get(username=username)
-        except User.DoesNotExcist:
-            user = User(username=username, password=os.urandom(32))
+        except User.DoesNotExist:
+            user = User(
+                username=username, 
+                password=''.join(chr(randint(97, 122)) for _ in range(50))
+            )
             user.save()
         return user
 

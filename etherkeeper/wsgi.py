@@ -1,5 +1,5 @@
 """
-WSGI config for trapperkeeper project.
+WSGI config for etherkeeper project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -9,10 +9,10 @@ https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 
 import os
 try:
-    import trapperkeeper.settings_local
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trapperkeeper.settings_local")
+    import etherkeeper.settings_local
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "etherkeeper.settings_local")
 except:
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trapperkeeper.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "etherkeeper.settings")
 
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

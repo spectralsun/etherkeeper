@@ -1,1 +1,2 @@
-trapperkeeper/settings_local.py
+etherkeeper/settings_local.py
+webassets-external/*

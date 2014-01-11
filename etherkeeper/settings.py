@@ -1,5 +1,5 @@
 """
-Django settings for trapperkeeper project.
+Django settings for EtherKeeper project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -37,10 +37,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'trapperkeeper.core',
+    'south',
+    'etherkeeper.core',
+    'etherkeeper.etherpad',
     'django_assets',
-    'django_jinja',
-    'httpproxy'
+    'django_jinja2',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,9 +53,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'trapperkeeper.urls'
+ROOT_URLCONF = 'etherkeeper.urls'
 
-WSGI_APPLICATION = 'trapperkeeper.wsgi.application'
+WSGI_APPLICATION = 'etherkeeper.wsgi.application'
 
 
 # Database
@@ -62,8 +63,18 @@ WSGI_APPLICATION = 'trapperkeeper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        # Or path to database file if sqlite3.
+        'NAME': 'traperkeeper',
+        # Not used with sqlite3.
+        'USER': '',
+        # Not used with sqlite3.
+        'PASSWORD': '',
+        # Set to empty string for localhost. Not used with sqlite3.
+        'HOST': '',
+        # Set to empty string for default. Not used with sqlite3.
+        'PORT': '',
+        'OPTIONS': {'init_command': 'SET storage_engine=InnoDB'}
     }
 }
 
@@ -81,9 +92,13 @@ USE_L10N = True
 USE_TZ = True
 
 TEMPLATE_LOADERS = (
-    'django_jinja.loaders.AppLoader',
-    'django_jinja.loaders.FileSystemLoader',
+    'django_jinja2.loaders.filesystem.Loader',
+    'django_jinja2.loaders.app_directories.Loader',
 )
+
+JINJA2_EXTENSIONS = [
+    'webassets.ext.jinja2.AssetsExtension'
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
@@ -91,13 +106,10 @@ TEMPLATE_LOADERS = (
 STATIC_URL = '/static/'
 
 ASSETS_MODULES = [
-    'trapperkeeper.core.assets'
+    'etherkeeper.core.assets'
 ]
 
-BRAND = 'TrapperKeeper'
-
-# Possible values here: model, xmpp, openid
-AUTH_TYPE = '' 
+BRAND = 'EtherKeeper'
 
 ETHERPAD_URL = 'http://localhost:9001'
 ETHERPAD_KEY = ''

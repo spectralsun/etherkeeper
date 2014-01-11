@@ -1,4 +1,6 @@
-
+.navbar {
+    border-radius: 0;
+}
 .modal-header {
     background-color: #428BCA;
     border-color: #357EBD;
@@ -17,6 +19,7 @@
     border-right: none;
     border-top: none;
     border-bottom: none;
+    border-radius: 0;
 }
 .modal-close .glyphicon {
     top: 3px;
@@ -28,8 +31,11 @@
 .modal-footer {
     padding: 7px;
     border: none;
+    margin: 0;
 }
-
+#login_modal .form-horizontal {
+    padding:0 20px;
+}
 @media (min-width: 700px) {
     #login_modal .modal-dialog {
         width: 360px;
