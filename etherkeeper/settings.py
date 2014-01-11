@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'south',
     'etherkeeper.core',
     'etherkeeper.etherpad',
+    'etherkeeper.organize',
     'django_assets',
     'django_jinja2',
 )
@@ -65,7 +66,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         # Or path to database file if sqlite3.
-        'NAME': 'traperkeeper',
+        'NAME': 'etherkeeper',
         # Not used with sqlite3.
         'USER': '',
         # Not used with sqlite3.

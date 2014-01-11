@@ -7,8 +7,7 @@ js = Bundle(
     'lib/alertify/alertify.min.js',
     'lib/bootstrap/bootstrap.min.js',
     'lib/lodash.min.js',
-    'lib/backbone.min.js',
-
+    'lib/davis.min.js',
     'js/etherkeeper.js'
 )
 register('js', js)

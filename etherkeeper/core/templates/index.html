@@ -22,43 +22,59 @@
     <![endif]-->
 </head>
 
-<body>
+<body {% if user.id %}class="home-open"{% endif %}>
 
-    <div class="navbar navbar-inverse" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <!--button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button-->
-          <a class="navbar-brand" href="/">{{ brand }}</a>
+  <div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">{{ brand }}</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <div id="search" {% if user.id %}class="top"{% endif %}>
+          <input class="form-control" type="text" placeholder="Search Documents" />
+          <div class="text-center">
+            <button class="btn btn-primary">Search</button>
+          </div>
+        </div>  
+        <div id="create">
+          <button class="btn btn-success">Create Document</button>
         </div>
         <div id="navbar_user">
           {% include "user/navbar.jinja" %}
         </div>
       </div>
     </div>
+  </div>
 
-    <div id="main" class="container">
-      <div id="create">
-        <button class="btn btn-success">Create Document</button>
-      </div>
-
-      <div id="search">
-          <input class="form-control" type="text" placeholder="Search Documents" />
-          <div class="text-center">
-            <button class="btn btn-primary">Search</button>
-          </div>
-      </div>
-    </div>
+  <div id="main" class="container">
+  
+    
+  </div>
    
-    <div id="viewer" class="container">
-      <iframe></iframe>
-    </div>
-  </div> <!-- /container -->
+  <div id="viewer_bar" class="container">
+    <button class="btn btn-primary" data-toggle="modal" data-target="#share_modal">Share</button>
+    <span class="title-edit">
+      
+    </span>
+  </div>
+
+  <div id="viewer" class="container">
+    <iframe></iframe>
+  </div>
+
+  <div id="home" class="container">
+    {% if user.id %}
+      {% include 'user/home.jinja' %}
+    {% endif %}
+  </div>
   {% include "modal/login.jinja" %}
+  {% include "modal/share.jinja" %}
   {% assets 'js' %}
   <script src="{{ ASSET_URL }}"></script>
   {% endassets %}

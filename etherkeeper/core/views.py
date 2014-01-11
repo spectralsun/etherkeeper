@@ -1,15 +1,19 @@
-from django.template import loader
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
-from etherkeeper.util.helpers import jsonify
+from etherkeeper.util.helpers import jsonify, srender
+from etherkeeper.core.models import Author
 
 def home_view(request):    
-    print request.user
+    author = False
+    if request.user.id:
+        author = Author.objects.filter(user=request.user).first()
     return render(request, 'index.html', {
         'brand': settings.BRAND,
-        'user': request.user
+        'user': request.user,
+        'author': author,
+        'documents': author.padauthor_set.all()
     })
 
 @ensure_csrf_cookie
@@ -21,18 +25,20 @@ def login_view(request):
         login(request, user)
     else:
         return jsonerror()        
-
-    return jsonify(dict(
+    author = Author.get_by_user(request.user)
+    documents = author.padauthor_set.all()
+    return jsonify(
         success=True, 
-        navbar=loader.render_to_string('user/navbar.jinja', dict(user=user))
-    ))
+        navbar=srender('user/navbar.jinja', user=user),
+        home=srender('user/home.jinja', documents=documents)
+    )
 
 
 @ensure_csrf_cookie
 def logout_view(request):
     logout(request)
 
-    return jsonify(dict(
+    return jsonify(
         success=True, 
-        navbar=loader.render_to_string('user/navbar.jinja')
-    ))
+        navbar=srender('user/navbar.jinja')
+    )
