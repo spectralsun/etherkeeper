@@ -22,7 +22,7 @@
     <![endif]-->
 </head>
 
-<body {% if user.id %}class="home-open"{% endif %}>
+<body {% if author %}class="home-open"{% endif %}>
 
   <div class="navbar navbar-inverse" role="navigation">
     <div class="container">
@@ -36,7 +36,7 @@
         <a class="navbar-brand" href="/">{{ brand }}</a>
       </div>
       <div class="collapse navbar-collapse">
-        <div id="search" {% if user.id %}class="top"{% endif %}>
+        <div id="search" {% if author %}class="top"{% endif %}>
           <input class="form-control" type="text" placeholder="Search Documents" />
           <div class="text-center">
             <button class="btn btn-primary">Search</button>
@@ -59,19 +59,24 @@
    
   <div id="viewer_bar" class="container">
     <button class="btn btn-primary" data-toggle="modal" data-target="#share_modal">Share</button>
-    <span class="title-edit">
-      
+    <span class="edit-title">
+      <a class="title-holder"></a>
+      <input type="text" class="form-control" placeholder="Untitled Document" />      
     </span>
   </div>
 
   <div id="viewer" class="container">
-    <iframe></iframe>
+    <iframe src=""></iframe>
   </div>
 
   <div id="home" class="container">
-    {% if user.id %}
+    {% if author %}
       {% include 'user/home.jinja' %}
     {% endif %}
+  </div>
+
+  <div id="loading">
+    <img src="/static/images/loading.gif" />
   </div>
   {% include "modal/login.jinja" %}
   {% include "modal/share.jinja" %}

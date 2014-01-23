@@ -14,6 +14,7 @@ class XmppBackend(object):
         auth = client.auth(username, password)
         if not auth:
             return None
+        print auth
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:

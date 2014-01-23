@@ -9,5 +9,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/etherpad/create', 'etherkeeper.etherpad.views.create_view'),
     url(r'^api/etherpad/open', 'etherkeeper.etherpad.views.open_view'),
+    url(r'^api/etherpad/title', 'etherkeeper.etherpad.views.title_view'),
+    url(r'^api/etherpad/set_title', 'etherkeeper.etherpad.views.set_title_view'),
     url(r'.*', 'etherkeeper.core.views.home_view', name='home'),
 )

@@ -84,7 +84,21 @@ a {
     display: none;
 }
 #viewer_bar {
-    padding: 7px 0;
+    padding-bottom: 7px;
+}
+
+.edit-title {
+    display:inline-block;
+    width: 320px;
+}
+.edit-title input {
+    display: none;
+}
+.title-holder {
+    cursor: pointer;
+    font-size: 20px;
+    margin-left: 13px;
+    vertical-align: middle;
 }
 .viewer-open #viewer,
 .viewer-open #viewer_bar {
@@ -95,6 +109,7 @@ a {
     height: 100%;
     border: 1px solid #ccc;
     border-radius: 3px;
+    display: none;
 }
 #home {
     display: none;
@@ -110,4 +125,13 @@ a {
 #home .cb {
     width: 34px;
     text-align: center;
+}
+
+#loading {
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -42.5px;
+    margin-top: -42.5px;
 }

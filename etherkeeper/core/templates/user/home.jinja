@@ -21,20 +21,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for document in documents %}
-                <td class="cb"><input type="checkbox" value="{{ document.id }}" /></td>
-                <td>
-                    <a href="/etherpad/{{ document.id }}">
-                        {% if document.name|length > 0 %}
-                            {{ document.name }}
-                        {% else %}
-                            Untitled Document 
-                        {% endif %}
-                    </a>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
+            {% for document in author.get_documents() %}
+                <tr>
+                    <td class="cb"><input type="checkbox" value="{{ document.id }}" /></td>
+                    <td>
+                        <a href="/etherpad/{{ document.id }}">
+                            {% if document.pad.title|length > 0 %}
+                                {{ document.pad.title }}
+                            {% else %}
+                                Untitled Document 
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>   
             {% endfor %}
         </tbody>
     </table>
