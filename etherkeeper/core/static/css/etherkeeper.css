@@ -75,6 +75,7 @@ a {
 }
 .viewer-open #search button,
 .home-open #search button {
+    -webkit-transform: translate(160px,-41px);
     transform: translate(160px,-41px);
 }
 
@@ -127,6 +128,13 @@ a {
     text-align: center;
 }
 
+#home .icon {
+    padding: 5px;
+    width: 23px;
+}
+#home .icon span {
+    font-size: 23px;
+}
 #loading {
     display: none;
     position: absolute;

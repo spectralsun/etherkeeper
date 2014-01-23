@@ -5,7 +5,7 @@
         create_doc: function() {
             $.post('/api/etherpad/create', function (json) {
                 if (json.success) {
-                    EtherKeeper.open_doc(json)
+                    EtherKeeper.set_route('/etherpad/' + json.id, 'state').open_doc(json);
                 }
             }, 'json');
         },
@@ -43,6 +43,7 @@
             },'json').fail(onfail);
         },
 
+        // gets a pad's title
         get_title: function() {
             var onfail = EtherKeeper.onfail('get title');
             $.post('/api/etherpad/title', { id: this.current_pad }, function(json) {
@@ -71,21 +72,24 @@
         },
         
         // sends a message to the etherpad instance
+        // TODO: replace the hostname with var
         send_message: function(data) {
-            
             iframe_window.postMessage(JSON.stringify(data), 'http://localhost:9001');
         },
 
         // sets the current location to the path and fire a pushState event
-        set_route: function(path) {
+        set_route: function(path, method) {
+            if (method === undefined) 
+                method = 'get'
             Davis.location.assign(new Davis.Request({
-                method: 'get',
+                method: method,
                 fullPath: path,
                 title: ''
             }));
+            return this;
         },
 
-
+        // sets a documents title
         set_title: function(title) {
             var onfail = EtherKeeper.onfail('change document title');
             $.post('/api/etherpad/set_title', { 
@@ -99,6 +103,14 @@
                 }
             },'json').fail(onfail);
         },
+
+        // generates function for string error and callback
+        onfail: function(error, cb) {
+            return function() { alertify.error('Failed to ' + error + '.'); if (cb) cb() }
+        },
+
+
+        // on window message event received
         onmessage: function(e) {
             var event = e.originalEvent;
             if (event.origin !== 'http://localhost:9001')
@@ -111,9 +123,8 @@
                 EtherKeeper.get_title()
             }
         },
-        onfail: function(error, cb) {
-            return function() { alertify.error('Failed to ' + error + '.'); if (cb) cb() }
-        },
+       
+        // on window resize
         onresize: function() {
             viewer.height($window.height() - 125);
         }
@@ -194,6 +205,7 @@
             EtherKeeper.page('home');
         });
         this.get('/etherpad/:pad', function (req) {
+            console.log(req)
             EtherKeeper.get_session(req.params['pad'])
         });
       
@@ -212,5 +224,5 @@
 
     EtherKeeper.set_route(window.location.pathname)
     
-    
+    this.ek = EtherKeeper;
 })();

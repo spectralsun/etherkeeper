@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
@@ -12,16 +13,17 @@ def get_etherpad_client():
         api_version='1.2.7', 
         base_params={ 'apikey': settings.ETHERPAD_KEY })
 
-def open_pad(pad, author, validUntil, e=None):
+def open_etherpad(pad, member, validUntil, e=None):
     if not e:
         e = get_etherpad_client()
     data = e.createSession(
         groupID=pad.groupid, 
-        authorID=author.etherpad_id, 
+        authorID=member.author.etherpad_id, 
         validUntil=validUntil)
     response = jsonify(
         success=True,
         pad='%s/p/%s' % (settings.ETHERPAD_URL, pad.padid),
+        id=member.id,
         title=pad.title)
     set_cookie(response, 'sessionID', data['sessionID'])
     return response
@@ -29,7 +31,7 @@ def open_pad(pad, author, validUntil, e=None):
 @ensure_csrf_cookie
 def create_view(request):
     'Creates an Etherpad-Lite Pad'
-    e = get_etherpad_client
+    e = get_etherpad_client()
 
     # Create a group for sharing functionality
     groupid = e.createGroup()['groupID']
@@ -50,7 +52,7 @@ def create_view(request):
     padmember = PadMember(pad=pad, role='owner', author=author)
     padmember.save()
 
-    return open_pad(pad, author, epoch_time(7 * 24 * 60 * 60), e)
+    return open_etherpad(pad, padmember, epoch_time(7 * 24 * 60 * 60), e)
 
 
 @ensure_csrf_cookie
@@ -60,7 +62,7 @@ def open_view(request):
     if not member or not member.check_access('write'):
         return jsonify(success=False)
 
-    return open_pad(member.pad, member.author, epoch_time(7 * 24 * 60**2))
+    return open_etherpad(member.pad, member, epoch_time(7 * 24 * 60**2))
 
 @ensure_csrf_cookie
 def set_title_view(request):
@@ -71,6 +73,8 @@ def set_title_view(request):
 
     pad = padmember.pad
     pad.title = request.POST['title']
+    pad.title_author = author
+    pad.title_modified = datetime.today()
     pad.save()
 
     e = get_etherpad_client()
@@ -83,5 +87,9 @@ def title_view(request):
     padmember = author.get_padmember(request.POST['id'])
     if not padmember or not padmember.check_access('read'):
         return jsonify(success=False)
-
-    return jsonify(success=True, title=padmember.pad.title)
+    pad = padmember.pad
+    return jsonify(
+        success=True, 
+        title=pad.title,
+        title_author=pad.title_author.user.username,
+        title_modified=pad.title_modified)

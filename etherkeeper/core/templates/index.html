@@ -37,13 +37,15 @@
       </div>
       <div class="collapse navbar-collapse">
         <div id="search" {% if author %}class="top"{% endif %}>
-          <input class="form-control" type="text" placeholder="Search Documents" />
+          <input class="form-control" type="text" placeholder="Search" />
           <div class="text-center">
             <button class="btn btn-primary">Search</button>
           </div>
         </div>  
         <div id="create">
-          <button class="btn btn-success">Create Document</button>
+          <button class="btn btn-success">
+            <span class="glyphicon glyphicon-plus"></span>
+          </button>
         </div>
         <div id="navbar_user">
           {% include "user/navbar.jinja" %}
@@ -69,7 +71,7 @@
     <iframe src=""></iframe>
   </div>
 
-  <div id="home" class="container">
+  <div id="home">
     {% if author %}
       {% include 'user/home.jinja' %}
     {% endif %}
