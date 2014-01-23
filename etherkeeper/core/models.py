@@ -9,3 +9,10 @@ class Author(models.Model):
     @classmethod
     def get_by_user(self, user):
         return self.objects.filter(user=user).first()
+
+    
+    def get_padmember(self, id):
+        return self.padmember_set.filter(id=id).first()
+
+    def get_documents(self):
+        return self.padmember_set.all()
