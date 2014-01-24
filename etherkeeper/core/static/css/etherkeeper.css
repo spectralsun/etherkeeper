@@ -39,7 +39,8 @@ a {
     text-align: center;
 }
 .viewer-open #search,
-.home-open #search {
+.home-open #search,
+.invites-open #search {
     top: 9px;
     margin-top: 0;
     text-align: left;
@@ -52,14 +53,16 @@ a {
     transition: all 1s ease 0s;
 }
 .viewer-open #search input,
-.home-open #search input
+.home-open #search input,
+.invites-open #search input
  {
     width: 323px;
     display: inline-block;
 }
 @media (max-width: 990px) {
     .viewer-open #search input,
-    .home-open #search input
+    .home-open #search input,
+    .invites-open #search input
      {
         width: 205px;
         margin-left: 117px;
@@ -70,11 +73,13 @@ a {
 
 }
 .viewer-open #search .text-center,
-.home-open #search .text-center {
+.home-open #search .text-center,
+.invites-open #search .text-center {
     height: 0;
 }
 .viewer-open #search button,
-.home-open #search button {
+.home-open #search button,
+.invites-open #search button {
     -webkit-transform: translate(160px,-41px);
     transform: translate(160px,-41px);
 }
@@ -87,7 +92,10 @@ a {
 #viewer_bar {
     padding-bottom: 7px;
 }
-
+#viewer_bar .pull-right a {
+    padding: 2px 8px 0;
+    font-size:21px;
+}
 .edit-title {
     display:inline-block;
     width: 320px;
@@ -115,7 +123,11 @@ a {
 #home {
     display: none;
 }
-.home-open #home {
+.home-open #home,
+.invites-open #home {
+    display: block;
+}
+.home-open #all {
     display: block;
 }
 #home .left-bar {
@@ -142,4 +154,12 @@ a {
     top: 50%;
     margin-left: -42.5px;
     margin-top: -42.5px;
+}
+
+.page {
+    display: none;
+}
+
+.invites-open #invites {
+    display: block;
 }

@@ -6,6 +6,7 @@
             $.post('/api/etherpad/create', function (json) {
                 if (json.success) {
                     EtherKeeper.set_route('/etherpad/' + json.id, 'state').open_doc(json);
+                    EtherKeeper.set_page('viewer')
                 }
             }, 'json');
         },
@@ -29,7 +30,7 @@
         get_session: function(pad) {            
             loading.show();
             this.current_pad = pad;
-            this.page('viewer');
+            this.set_page('viewer');
             var onfail = EtherKeeper.onfail('open document', function() {
                 loading.hide();
                 EtherKeeper.set_route('/home');
@@ -61,13 +62,18 @@
         },
         
         // sets a page-class on the body tag for pagination
-        page: function(page) {
+        set_page: function(page) {
             this.index();
             body.addClass(page + '-open');
             if (page !== 'viewer') {
                 iframe.hide();
                 iframe.removeAttr('src');
             }
+            return this;
+        },
+
+        set_treenav: function(page) {
+            $('a[href="/' + page + '"]').parent().addClass('active').siblings().removeClass('active');
             return this;
         },
         
@@ -81,9 +87,8 @@
         set_route: function(path, method) {
             if (method === undefined) 
                 method = 'get'
-            Davis.location.assign(new Davis.Request({
+            Davis.location.assign(new Davis.Request(path, {
                 method: method,
-                fullPath: path,
                 title: ''
             }));
             return this;
@@ -172,7 +177,7 @@
                 alertify.success('Logged in.');
                 $('#navbar_user').html(json.navbar);
                 home.html(json.home);
-                EtherKeeper.page('home');
+                EtherKeeper.set_page('home');
             }
         },'json').fail(function() {
             alertify.error('Failed to log in successfuly')
@@ -181,6 +186,10 @@
 
     $('#create button').click(EtherKeeper.create_doc);
 
+    $('.ep-proxy').click(function() {
+        console.log( $(this).attr('id'))
+        EtherKeeper.send_message({ type: $(this).attr('id') });
+    });
 
     $(document).on('click', '.logout', function() {
         $.post('/logout', function(json) {
@@ -202,10 +211,12 @@
 
         });
         this.get('/home', function() {
-            EtherKeeper.page('home');
+            EtherKeeper.set_page('home').set_treenav('home');
+        });
+        this.get('/invites', function() {
+            EtherKeeper.set_page('invites').set_treenav('invites');
         });
         this.get('/etherpad/:pad', function (req) {
-            console.log(req)
             EtherKeeper.get_session(req.params['pad'])
         });
       
