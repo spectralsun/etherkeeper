@@ -65,10 +65,41 @@
       <a class="title-holder"></a>
       <input type="text" class="form-control" placeholder="Untitled Document" />      
     </span>
+    <div class="pull-right">
+    
+      <div id="tag_dropdown" class="dropdown">
+        <a class="btn btn-primary dropdown-tottle" data-toggle="dropdown" title="Tags">
+          <span class="glyphicon glyphicon-tags"></span>
+        </a>
+        <div class="dropdown-menu">
+          <input id="tags" />
+        </div>
+      </div>
+      <a id="revisionlink" class="btn btn-primary ep-proxy" title="Mark as saved revision">
+        <span class="glyphicon glyphicon-star-empty"></span>
+      </a>
+      <a class="btn btn-primary" title="View History">
+        <span class="glyphicon glyphicon-time"></span>
+      </a>
+      <a id="importexportlink" class="btn btn-primary ep-proxy" title="Import/Export">
+        <span class="glyphicon glyphicon-transfer"></span>
+      </a>
+      <a id="usericon" class="btn btn-primary ep-proxy" title="Users">
+        <span class="glyphicon glyphicon-user"></span>
+        <span class="ball-icon green">
+          <span class="bkgd"></span>
+          <span class="count">0</span>
+        </span>
+      </a>
+      <a id="settingslink" class="btn btn-primary ep-proxy" title="Settings">
+        <span class="glyphicon glyphicon-cog"></span>
+
+      </a>
+    </div>
   </div>
 
   <div id="viewer" class="container">
-    <iframe src=""></iframe>
+    <iframe src="" data-etherpad-url="{{ etherpad_url }}"></iframe>
   </div>
 
   <div id="home">

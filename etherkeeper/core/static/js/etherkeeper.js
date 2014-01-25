@@ -56,6 +56,17 @@
             },'json').fail(onfail);  
         },
 
+        get_sharing: function() {
+            var onfail = EtherKeeper.onfail('get sharing');
+            $.post('/api/etherpad/sharing', { id: this.current_pad }, function(json) {
+                if (json.success) {
+                    $('.shares').html(json.sharing);
+                } else {
+                    onfail();
+                }
+            },'json').fail(onfail);  
+        },
+
         // clears all body classes causing a revert to index
         index: function() {
             body.attr('class','');
@@ -132,6 +143,24 @@
         // on window resize
         onresize: function() {
             viewer.height($window.height() - 125);
+        }, 
+
+        // davis.js routes
+        routes: function() {
+            this.get('/', EtherKeeper.index);
+            this.get('/search', EtherKeeper.index);
+            this.get('/search/:search', function(req) {
+
+            });
+            this.get('/home', function() {
+                EtherKeeper.set_page('home').set_treenav('home');
+            });
+            this.get('/invites', function() {
+                EtherKeeper.set_page('invites').set_treenav('invites');
+            });
+            this.get('/etherpad/:pad', function (req) {
+                EtherKeeper.get_session(req.params['pad'])
+            });
         }
     }
     var body = $('body'),
@@ -141,6 +170,7 @@
         iframe = $('iframe', viewer),
         iframe_window = iframe[0].contentWindow,
         home = $('#home'),
+        share_modal = $('#share_modal'),
         loading = $('#loading'),
         $window = $(window);
     $window.resize(EtherKeeper.onresize)
@@ -186,8 +216,39 @@
 
     $('#create button').click(EtherKeeper.create_doc);
 
+    share_modal.on('show.bs.modal', function(e) {
+        EtherKeeper.get_sharing();
+    });
+
+    $('#add_user', share_modal).tagsinput()
+
+    $('#add_user').tagsinput('input').typeahead({
+        remote: '/search/users?q=%QUERY'
+    }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+        this.tagsinput('add', datum.value);
+        this.tagsinput('input').typeahead('setQuery', '');
+    }, $('#add_user')))
+
+    $('#add_user').tagsinput('input').keyup(function(e) {
+        if(e.keyCode == 13)
+            $(this).typeahead('setQuery','')
+    });
+
+    $('#add_member button').click(function() {
+        $.post('/api/etherpad/share', {
+            id: EtherKeeper.current_pad,
+            access: $('#share_role select').val(),
+            members: $('#add_user').val()
+        }, function(json) {
+            if (json.success) {
+                alertify.success('Invited users successfully.');
+            }
+        }, 'json');
+    });
+
+    $('#viewer_bar .pull-right a').tooltip()
+
     $('.ep-proxy').click(function() {
-        console.log( $(this).attr('id'))
         EtherKeeper.send_message({ type: $(this).attr('id') });
     });
 
@@ -202,25 +263,20 @@
         }, 'json');
     }).on('change', 'thead .cb input', function() {
         $(this).parents('thead').siblings().find('.cb input').prop('checked', $(this).prop('checked'));
+    }).on('click', '#invites .btn-success', function() {
+        var row = $(this).parents('tr');
+        $.post('/api/etherpad/respond', {
+            accept: true,
+            id: row.data('id')
+        }, function(json) {
+            if (json.success) {
+                alertify.success('Successfully accepted invite.');
+                row.fadeOut();
+            }
+        }, 'json');
     });
 
-    var routing = Davis(function () {
-        this.get('/', EtherKeeper.index);
-        this.get('/search', EtherKeeper.index);
-        this.get('/search/:search', function(req) {
-
-        });
-        this.get('/home', function() {
-            EtherKeeper.set_page('home').set_treenav('home');
-        });
-        this.get('/invites', function() {
-            EtherKeeper.set_page('invites').set_treenav('invites');
-        });
-        this.get('/etherpad/:pad', function (req) {
-            EtherKeeper.get_session(req.params['pad'])
-        });
-      
-    });
+    var routing = Davis(EtherKeeper.routes);
 
     routing.start();
 

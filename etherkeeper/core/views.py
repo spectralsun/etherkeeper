@@ -2,19 +2,23 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 from etherkeeper.util.helpers import jsonify, srender, jsonerror
 from etherkeeper.core.models import Author
 
 @ensure_csrf_cookie
 def home_view(request):    
     author = False
-    print request.user
+    invites = False
     if request.user.id:
         author = Author.get_by_user(request.user)
+        invites = author.invites.all()
 
     return render(request, 'index.html', {
         'brand': settings.BRAND,
-        'author': author
+        'etherpad_url': settings.ETHERPAD_URL,
+        'author': author,
+        'invites': invites
     })
 
 @ensure_csrf_cookie
@@ -41,3 +45,8 @@ def logout_view(request):
         success=True, 
         navbar=srender('user/navbar.jinja')
     )
+
+def search_users_view(request):
+    search = User.objects.filter(username__icontains=request.GET['q'])
+    users = [user.username for user in search]
+    return jsonify(users)

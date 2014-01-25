@@ -5,5 +5,28 @@
 {% block modal_title %}Shares{% endblock %}
 
 {% block modal_body %}
-    <div class="share-form"></div>
+    <div class="shares"></div>
+    
+{% endblock %}
+
+{% block modal_footer %}
+    <div id="add_member">
+        <div class="row">
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-7">
+                <input id="add_user" type="text" class="form-control" placeholder="Add Users..." />
+            </div>
+            <div id="share_role" class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
+                <select class="form-control">
+                    <option value="admin">Admin</option>
+                    <option value="write">Write</option>
+                    <option value="read">Read</option>
+                </select>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2">
+                <button class="btn btn-primary">
+                    <span>Add</span>
+                </button>
+            </div>
+        </div>
+    </div>
 {% endblock %}

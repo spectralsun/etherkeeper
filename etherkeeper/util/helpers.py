@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.template import loader
 
 def epoch_time(add=0):
+    'Returns time since epoch'
     return time.mktime(datetime.datetime.now().timetuple()) + add
 
 def jsonify(*args, **kwargs):

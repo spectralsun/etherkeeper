@@ -96,6 +96,46 @@ a {
     padding: 2px 8px 0;
     font-size:21px;
 }
+#tag_dropdown {
+    display: inline-block;
+    vertical-align: middle;
+}
+#usericon {
+    position: relative;
+}
+.green-ball {
+    position: absolute;
+    left: 10px;
+    bottom: 7px;
+    width: 7px;
+    height: 7px;
+    background: #90ee90;
+    border-radius: 15px;
+}
+.ball-icon {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    font-size: 13px
+}
+.ball-icon .count {
+    position: relative;
+    z-index: 1;
+    padding: 4px;
+}
+.ball-icon .bkgd {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    opacity: 0.67;
+    border-radius: 15px;
+}
+.ball-icon.green .bkgd {
+    background: #008000;
+    border: 1px solid #006900;
+}
 .edit-title {
     display:inline-block;
     width: 320px;
@@ -162,4 +202,21 @@ a {
 
 .invites-open #invites {
     display: block;
+}
+#invites .none {
+    display: none;
+}
+#invites .response {
+    padding: 3px 0;
+    width: 42px;
+}
+#invites .response button {
+    padding: 4px 8px;
+}
+#share_role {
+    padding-left: 0
+}
+#share_role select {
+    padding-right: 4px;
+    padding-left: 5px;
 }

@@ -1,0 +1,22 @@
+{% for invite in invites %}
+    <tr data-id="{{ invite.id }}">
+        <td><input type="checkbox" /></td>
+            <td class="icon">
+            <span class="glyphicon glyphicon-file"></span>
+        </td>
+        <td class="response accept">
+            <button class="btn btn-success">
+                <span class="glyphicon glyphicon-ok"></span>
+            </button>   
+        </td>
+        <td> {{ invite.pad.get_title() }}</td>
+        <td> {{ invite.sender.user.username }}</td>
+        <td> {{ invite.role }}</td>
+        <td> {{ invite.sent.strftime('%Y') }}</td>
+        <td class="response deny">
+            <button class="btn btn-danger">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </td>
+    </tr>   
+{% endfor %}

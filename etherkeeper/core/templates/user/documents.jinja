@@ -1,0 +1,22 @@
+{% for document in author.get_documents() %}
+    <tr data-id="{{ document.id }}">
+        <td class="cb">
+            <input type="checkbox" value="{{ document.id }}" />
+        </td>
+        <td class="icon">
+            <span class="glyphicon glyphicon-file"></span>
+        </td>
+        <td>
+            <a href="/etherpad/{{ document.id }}">
+                {% if document.pad.title|length > 0 %}
+                    {{ document.pad.title }}
+                {% else %}
+                    Untitled Document 
+                {% endif %}
+            </a>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>   
+{% endfor %}

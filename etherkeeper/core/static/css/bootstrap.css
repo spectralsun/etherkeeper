@@ -33,6 +33,9 @@
     border: none;
     margin: 0;
 }
+.modal-loading {
+    display: none;
+}
 #login_modal .form-horizontal {
     padding:0 20px;
 }
@@ -58,4 +61,66 @@
 }
 #home .row .col-lg-10 {
     padding-right: 0;
+}
+
+#add_member .row {
+    margin-right: 0;
+}
+#add_member .row .col-lg-1 {
+    padding: 0;
+}
+
+.label-info, .badge-info {
+    background-color: #3A87AD;
+    color: #fff;
+}
+.label, .badge {
+    color: #FFFFFF;
+    display: inline-block;
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    padding: 2px 4px;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    vertical-align: baseline;
+    white-space: nowrap;
+}
+.bootstrap-tagsinput {
+  border: 1px solid #CCCCCC;
+  border-radius: 4px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  padding: 4px 4px 1px;
+  text-align: left;
+}
+.bootstrap-tagsinput input {
+    color: black;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+    cursor: pointer;
+    margin-left: 8px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"]:after {
+    content: "x";
+    padding: 0 2px;
+}
+
+.bootstrap-tagsinput .tag {
+  margin-right: 2px;
+  color: white;
+  text-align: left;
+  white-space: normal;
+  position: relative;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.bootstrap-tagsinput .tag [data-role="remove"] {
+  margin-left: 8px;
+  cursor: pointer;
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  margin-top: -7px;
 }

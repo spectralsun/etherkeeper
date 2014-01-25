@@ -3,9 +3,9 @@ from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
 from etherpad_lite import EtherpadLiteClient
-from etherkeeper.etherpad.models import Pad, PadMember
+from etherkeeper.etherpad.models import Pad, PadMember, Invite
 from etherkeeper.core.models import Author
-from etherkeeper.util.helpers import jsonify, set_cookie, epoch_time
+from etherkeeper.util.helpers import jsonify, set_cookie, epoch_time, srender
 
 def get_etherpad_client():
     return EtherpadLiteClient(
@@ -13,18 +13,18 @@ def get_etherpad_client():
         api_version='1.2.7', 
         base_params={ 'apikey': settings.ETHERPAD_KEY })
 
-def open_etherpad(pad, member, validUntil, e=None):
+def open_etherpad(pad, author, validUntil, e=None, **kwargs):
     if not e:
         e = get_etherpad_client()
     data = e.createSession(
         groupID=pad.groupid, 
-        authorID=member.author.etherpad_id, 
+        authorID=author.etherpad_id, 
         validUntil=validUntil)
     response = jsonify(
         success=True,
         pad='%s/p/%s' % (settings.ETHERPAD_URL, pad.padid),
-        id=member.id,
-        title=pad.title)
+        title=pad.title,
+        **kwargs)
     set_cookie(response, 'sessionID', data['sessionID'])
     return response
 
@@ -43,16 +43,12 @@ def create_view(request):
 
     user = request.user
     author = Author.get_by_user(user)
-    if not author:
-        author = Author(user=user)
-        author.etherpad_id = e.createAuthor(name=user.username)['authorID']
-        author.save()
-
+        
     # Set current 
     padmember = PadMember(pad=pad, role='owner', author=author)
     padmember.save()
 
-    return open_etherpad(pad, padmember, epoch_time(7 * 24 * 60 * 60), e)
+    return open_etherpad(pad, author, epoch_time(604800), e, id=padmember.id)
 
 
 @ensure_csrf_cookie
@@ -62,7 +58,7 @@ def open_view(request):
     if not member or not member.check_access('write'):
         return jsonify(success=False)
 
-    return open_etherpad(member.pad, member, epoch_time(7 * 24 * 60**2))
+    return open_etherpad(member.pad, author, epoch_time(7 * 24 * 60**2))
 
 @ensure_csrf_cookie
 def set_title_view(request):
@@ -93,3 +89,49 @@ def title_view(request):
         title=pad.title,
         title_author=pad.title_author.user.username,
         title_modified=pad.title_modified)
+
+@ensure_csrf_cookie
+def open_sharing_view(request):
+    author = Author.get_by_user(request.user)
+    padmember = author.get_padmember(request.POST['id'])
+    if not padmember or not padmember.check_access('read'):
+        return jsonify(success=False)
+
+    return jsonify(success=True,
+        sharing=srender('share/pad.jinja', members=padmember.pad.get_members_in_order()))
+
+@ensure_csrf_cookie
+def share_view(request):
+    author = Author.get_by_user(request.user)
+    padmember = author.get_padmember(request.POST['id'])
+    if not padmember or not padmember.check_access('admin'):
+        return jsonify(success=False)
+
+    acl = dict(owner=['admin','write','read'], admin=['write','read'])
+    if request.POST['access'] not in acl[padmember.role]:
+        return jsonify(success=False)      
+          
+    members = request.POST['members'].split(',')
+    for member in members:
+        to = Author.get_by_username(member)
+        invite = Invite(
+            pad=padmember.pad, 
+            role=request.POST['access'], 
+            to=to,
+            sender=author)
+        invite.save()
+
+    return jsonify(success=True)
+
+@ensure_csrf_cookie
+def respond_view(request):
+    author = Author.get_by_user(request.user)
+    invite = author.invites.filter(id=request.POST['id']).first()
+    if not invite:
+        return jsonify(success=False)
+
+    if request.POST['accept'] == 'true':
+        padmember = PadMember(pad=invite.pad, role=invite.role, author=author)
+        padmember.save()
+    invite.delete()
+    return jsonify(success=True)
