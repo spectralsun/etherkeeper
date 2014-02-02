@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from etherkeeper.util.helpers import get_etherpad_client
+from etherkeeper.etherpad.helpers import get_etherpad_client
 
 class Author(models.Model):
     user = models.OneToOneField(User, related_name='author')
