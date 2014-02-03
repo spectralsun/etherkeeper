@@ -11,9 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'Invite'
         db.create_table(u'etherpad_invite', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('pad', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['etherpad.Pad'], unique=True)),
-            ('sender', self.gf('django.db.models.fields.related.OneToOneField')(related_name='sent_invites', unique=True, to=orm['core.Author'])),
-            ('to', self.gf('django.db.models.fields.related.OneToOneField')(related_name='invites', unique=True, to=orm['core.Author'])),
+            ('pad', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['etherpad.Pad'])),
+            ('sender', self.gf('django.db.models.fields.related.ForeignKey')(related_name='sent_invites', to=orm['core.Author'])),
+            ('to', self.gf('django.db.models.fields.related.ForeignKey')(related_name='invites', to=orm['core.Author'])),
             ('role', self.gf('django.db.models.fields.CharField')(max_length=10)),
             ('sent', self.gf('django.db.models.fields.DateField')(default=datetime.datetime(2014, 1, 23, 0, 0))),
         ))

@@ -2,11 +2,12 @@ from datetime import datetime
 from django.shortcuts import render
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.conf import settings
-from etherpad_lite import EtherpadLiteClient
 from etherkeeper.etherpad.models import Pad, PadMember, Invite
 from etherkeeper.etherpad.helpers import get_etherpad_client, open_etherpad
 from etherkeeper.core.models import Author
-from etherkeeper.util.helpers import jsonify, set_cookie, epoch_time, srender
+from etherkeeper.util.helpers import jsonify, set_cookie, epoch_time, \
+    srender
+
 
 @ensure_csrf_cookie
 def create_view(request):
@@ -33,6 +34,7 @@ def create_view(request):
 
 @ensure_csrf_cookie
 def open_view(request):
+    'Open an etherpad-lite pad for writing'
     author = Author.get_by_user(request.user)
     member = author.get_padmember(request.POST['id'])
     if not member or not member.check_access('write'):
@@ -41,7 +43,19 @@ def open_view(request):
     return open_etherpad(member.pad, author, epoch_time(7 * 24 * 60**2))
 
 @ensure_csrf_cookie
+def read_view(request):
+    'Read an etherpad-lite pad'
+    author = Author.get_by_user(request.user)
+    member = author.get_padmember(request.POST['id'])
+    if not member or not member.check_access('write'):
+        return jsonify(success=False)
+
+    # TODO
+    return jsonify(success=True) 
+
+@ensure_csrf_cookie
 def set_title_view(request):
+    "Set a pad's and broadcast to active authors"
     author = Author.get_by_user(request.user)
     padmember = author.get_padmember(request.POST['id'])
     if not padmember or not padmember.check_access('write'):
@@ -68,17 +82,24 @@ def title_view(request):
         success=True, 
         title=pad.title,
         title_author=pad.title_author.user.username,
-        title_modified=pad.title_modified)
+        #title_modified=pad.title_modified
+        )
 
 @ensure_csrf_cookie
 def open_sharing_view(request):
+    'Returns the sharing html for a pad'
     author = Author.get_by_user(request.user)
     padmember = author.get_padmember(request.POST['id'])
     if not padmember or not padmember.check_access('read'):
         return jsonify(success=False)
+    invites = padmember.pad.get_invites_in_order()
 
-    return jsonify(success=True,
-        sharing=srender('share/pad.jinja', members=padmember.pad.get_members_in_order()))
+    return jsonify(
+        success=True,
+        sharing=srender('share/pad.jinja', 
+            members=padmember.pad.get_members_in_order(),
+            invites=invites
+        ))
 
 @ensure_csrf_cookie
 def share_view(request):
@@ -115,3 +136,7 @@ def respond_view(request):
         padmember.save()
     invite.delete()
     return jsonify(success=True)
+
+@ensure_csrf_cookie
+def ignore_invite_view(request):
+    pass

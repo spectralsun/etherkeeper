@@ -17,7 +17,7 @@ class Migration(SchemaMigration):
         # Adding model 'PadMember'
         db.create_table(u'etherpad_padmember', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('pad', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['etherpad.Pad'], unique=True)),
+            ('pad', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['etherpad.Pad'])),
             ('role', self.gf('django.db.models.fields.CharField')(max_length=10)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True)),
         ))

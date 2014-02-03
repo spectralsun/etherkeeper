@@ -40,7 +40,6 @@ def login_view(request):
 @ensure_csrf_cookie
 def logout_view(request):
     logout(request)
-
     return jsonify(
         success=True, 
         navbar=srender('user/navbar.jinja')

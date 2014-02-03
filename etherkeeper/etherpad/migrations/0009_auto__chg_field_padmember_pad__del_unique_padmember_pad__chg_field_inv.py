@@ -9,35 +9,35 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Removing unique constraint on 'Pad', fields ['title_author']
-        db.delete_unique(u'etherpad_pad', ['title_author_id'])
+        #db.delete_unique(u'etherpad_pad', ['title_author_id'])
 
         # Removing unique constraint on 'Invite', fields ['pad']
-        db.delete_unique(u'etherpad_invite', ['pad_id'])
+        #db.delete_unique(u'etherpad_invite', ['pad_id'])
 
         # Removing unique constraint on 'Invite', fields ['to']
-        db.delete_unique(u'etherpad_invite', ['to_id'])
+        #db.delete_unique(u'etherpad_invite', ['to_id'])
 
         # Removing unique constraint on 'Invite', fields ['sender']
-        db.delete_unique(u'etherpad_invite', ['sender_id'])
+        #db.delete_unique(u'etherpad_invite', ['sender_id'])
 
         # Removing unique constraint on 'PadMember', fields ['pad']
-        db.delete_unique(u'etherpad_padmember', ['pad_id'])
+        #db.delete_unique(u'etherpad_padmember', ['pad_id'])
 
 
         # Changing field 'PadMember.pad'
-        db.alter_column(u'etherpad_padmember', 'pad_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['etherpad.Pad']))
+        #db.alter_column(u'etherpad_padmember', 'pad_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['etherpad.Pad']))
 
         # Changing field 'Invite.sender'
-        db.alter_column(u'etherpad_invite', 'sender_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author']))
+        #db.alter_column(u'etherpad_invite', 'sender_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author']))
 
         # Changing field 'Invite.to'
-        db.alter_column(u'etherpad_invite', 'to_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author']))
+        #db.alter_column(u'etherpad_invite', 'to_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author']))
 
         # Changing field 'Invite.pad'
-        db.alter_column(u'etherpad_invite', 'pad_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['etherpad.Pad']))
+        #db.alter_column(u'etherpad_invite', 'pad_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['etherpad.Pad']))
 
         # Changing field 'Pad.title_author'
-        db.alter_column(u'etherpad_pad', 'title_author_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True))
+        #db.alter_column(u'etherpad_pad', 'title_author_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True))
 
     def backwards(self, orm):
 

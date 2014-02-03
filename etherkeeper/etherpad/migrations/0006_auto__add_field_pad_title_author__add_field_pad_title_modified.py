@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Pad.title_author'
         db.add_column(u'etherpad_pad', 'title_author',
-                      self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.Author'], unique=True, null=True),
+                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Author'], null=True),
                       keep_default=False)
 
         # Adding field 'Pad.title_modified'

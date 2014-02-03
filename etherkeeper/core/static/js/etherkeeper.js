@@ -60,7 +60,7 @@
             var onfail = EtherKeeper.onfail('get sharing');
             $.post('/api/etherpad/sharing', { id: this.current_pad }, function(json) {
                 if (json.success) {
-                    $('.shares').html(json.sharing);
+                    $('.shares tbody').html(json.sharing);
                 } else {
                     onfail();
                 }
@@ -91,7 +91,7 @@
         // sends a message to the etherpad instance
         // TODO: replace the hostname with var
         send_message: function(data) {
-            iframe_window.postMessage(JSON.stringify(data), 'http://localhost:9001');
+            iframe_window.postMessage(JSON.stringify(data), etherpad_url);
         },
 
         // sets the current location to the path and fire a pushState event
@@ -122,7 +122,11 @@
 
         // generates function for string error and callback
         onfail: function(error, cb) {
-            return function() { alertify.error('Failed to ' + error + '.'); if (cb) cb() }
+            return function(cb2) { 
+                alertify.error('Failed to ' + error + '.'); 
+                if (cb) cb() 
+                if (cb2) cb2() 
+            }
         },
 
 
@@ -132,7 +136,7 @@
             if (event.origin !== 'http://localhost:9001')
                 return;
             var data = JSON.parse(event.data);
-            console.log(data)
+    
             if (data.type === 'init') {
                 EtherKeeper.send_message({ type: 'init' });
             } else if (data.type === 'title_update') {
@@ -144,6 +148,21 @@
         onresize: function() {
             viewer.height($window.height() - 125);
         }, 
+
+        // accept or deny an invite, effectively removing it
+        respond_to_invite: function(accept, row) {
+            var onfail = EtherKeeper.onfail(accept ? 'accept invite' : 'deny invite');
+            $.post('/api/etherpad/respond', {
+                accept: accept,
+                id: row.data('id')
+            }, function(json) {
+                if (json.success) {
+                    alertify.success('Successfully ' + (accept ? 'accepted' : 'denied') + ' invite.');
+                    row.fadeOut();
+                } else
+                    onfail();
+            }, 'json').fail(onfail);
+        },
 
         // davis.js routes
         routes: function() {
@@ -169,10 +188,12 @@
         viewer_bar = $('#viewer_bar'),
         iframe = $('iframe', viewer),
         iframe_window = iframe[0].contentWindow,
+        etherpad_url = iframe.data('etherpad-url'),
         home = $('#home'),
         share_modal = $('#share_modal'),
         loading = $('#loading'),
         $window = $(window);
+    iframe.removeData('etherpad-url');
     $window.resize(EtherKeeper.onresize)
            .on('message', EtherKeeper.onmessage);
 
@@ -246,11 +267,19 @@
         }, 'json');
     });
 
-    $('#viewer_bar .pull-right a').tooltip()
+    $('#viewer_bar .pull-right a').tooltip();
+
+    $('#inites tr button').tooltip();
 
     $('.ep-proxy').click(function() {
         EtherKeeper.send_message({ type: $(this).attr('id') });
     });
+
+    $('#tag_dropdown').on('click', '.dropdown-menu', function(e) {
+        e.preventDefault();
+    })
+
+    $('#tags').tagsinput();
 
     $(document).on('click', '.logout', function() {
         $.post('/logout', function(json) {
@@ -264,16 +293,14 @@
     }).on('change', 'thead .cb input', function() {
         $(this).parents('thead').siblings().find('.cb input').prop('checked', $(this).prop('checked'));
     }).on('click', '#invites .btn-success', function() {
+        EtherKeeper.respond_to_invite(true, $(this).parents('tr'));
+    }).on('click', '#invites .btn-danger', function() {
         var row = $(this).parents('tr');
-        $.post('/api/etherpad/respond', {
-            accept: true,
-            id: row.data('id')
-        }, function(json) {
-            if (json.success) {
-                alertify.success('Successfully accepted invite.');
-                row.fadeOut();
+        alertify.confirm('Are you sure you wish to deny this invite?', function(resp) {
+            if (resp) {
+                EtherKeeper.respond_to_invite(false, row);
             }
-        }, 'json');
+        });
     });
 
     var routing = Davis(EtherKeeper.routes);
