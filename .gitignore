@@ -1,2 +1,3 @@
 etherkeeper/settings_local.py
 webassets-external/*
+etherkeeper.sqlite
