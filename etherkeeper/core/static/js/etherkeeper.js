@@ -3,7 +3,7 @@
 
         // creates a new document 
         create_doc: function() {
-            $.post('/api/etherpad/create', function (json) {
+            $.post('/etherpad/create', function (json) {
                 if (json.success) {
                     EtherKeeper.set_route('/etherpad/' + json.id, 'state').open_doc(json);
                     EtherKeeper.set_page('viewer')
@@ -35,7 +35,7 @@
                 loading.hide();
                 EtherKeeper.set_route('/home');
             });
-            $.post('/api/etherpad/open/', { id: pad }, function(json) {
+            $.post('/etherpad/open/', { id: pad }, function(json) {
                 if (json.success) {
                     EtherKeeper.open_doc(json)
                 } else {
@@ -47,7 +47,7 @@
         // gets a pad's title
         get_title: function() {
             var onfail = EtherKeeper.onfail('get title');
-            $.post('/api/etherpad/title', { id: this.current_pad }, function(json) {
+            $.post('/etherpad/title', { id: this.current_pad }, function(json) {
                 if (json.success) {
                     $('.title-holder').html(json.title)
                 } else {
@@ -58,7 +58,7 @@
 
         get_sharing: function() {
             var onfail = EtherKeeper.onfail('get sharing');
-            $.post('/api/etherpad/sharing', { id: this.current_pad }, function(json) {
+            $.post('/etherpad/sharing', { id: this.current_pad }, function(json) {
                 if (json.success) {
                     $('.shares tbody').html(json.sharing);
                 } else {
@@ -108,7 +108,7 @@
         // sets a documents title
         set_title: function(title) {
             var onfail = EtherKeeper.onfail('change document title');
-            $.post('/api/etherpad/set_title', { 
+            $.post('/etherpad/set_title', { 
                 title: title, 
                 id: this.current_pad
             }, function(json) {
@@ -152,7 +152,7 @@
         // accept or deny an invite, effectively removing it
         respond_to_invite: function(accept, row) {
             var onfail = EtherKeeper.onfail(accept ? 'accept invite' : 'deny invite');
-            $.post('/api/etherpad/respond', {
+            $.post('/etherpad/respond', {
                 accept: accept,
                 id: row.data('id')
             }, function(json) {
@@ -256,7 +256,7 @@
     });
 
     $('#add_member button').click(function() {
-        $.post('/api/etherpad/share', {
+        $.post('/etherpad/share', {
             id: EtherKeeper.current_pad,
             access: $('#share_role select').val(),
             members: $('#add_user').val()
