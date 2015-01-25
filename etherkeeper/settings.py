@@ -109,9 +109,11 @@ JINJA2_EXTENSIONS = [
 
 STATIC_URL = '/static/'
 
-ASSETS_MODULES = [
-    'etherkeeper.core.assets'
-]
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+)
 
 BRAND = 'EtherKeeper'
 
