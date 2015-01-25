@@ -12,7 +12,6 @@ js = Bundle(
     'lib/davis.min.js',
     'js/etherkeeper.js'
 )
-register('js', js)
 
 css = Bundle(
     'lib/bootstrap/bootstrap.min.css',
@@ -23,4 +22,3 @@ css = Bundle(
     'css/etherkeeper.css',
     'css/bootstrap.css',
 )
-register('css', css)
