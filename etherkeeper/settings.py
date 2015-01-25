@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'etherkeeper.core',
     'etherkeeper.etherpad',
     'etherkeeper.organize',
+    'etherkeeper.util',
 )
 
 MIDDLEWARE_CLASSES = (
