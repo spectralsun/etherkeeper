@@ -38,12 +38,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'south',
+
+    'django_assets',
+    'django_jinja2',
+
+    'etherkeeper',
     'etherkeeper.core',
     'etherkeeper.etherpad',
     'etherkeeper.organize',
-    'django_assets',
-    'django_jinja2',
 )
 
 MIDDLEWARE_CLASSES = (
