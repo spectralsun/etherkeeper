@@ -21,6 +21,7 @@ SECRET_KEY = 'j$^bhl43tq*6t2t-!=nof11p(^w)dp=&7y4#rgtrougg0gxm9&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ASSETS_DEBUG = True
 
 TEMPLATE_DEBUG = True
 
