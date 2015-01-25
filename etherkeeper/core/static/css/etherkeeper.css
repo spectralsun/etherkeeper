@@ -37,6 +37,7 @@ a {
     margin-top: -34px;
     transition: all 1s ease 0s;
     text-align: center;
+    z-index: 1000;
 }
 .viewer-open #search,
 .home-open #search,
