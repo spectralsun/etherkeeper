@@ -67,9 +67,9 @@ WSGI_APPLICATION = 'etherkeeper.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.sqlite3',
         # Or path to database file if sqlite3.
-        'NAME': 'etherkeeper',
+        'NAME': 'etherkeeper.sqlite',
         # Not used with sqlite3.
         'USER': '',
         # Not used with sqlite3.
@@ -78,7 +78,7 @@ DATABASES = {
         'HOST': '',
         # Set to empty string for default. Not used with sqlite3.
         'PORT': '',
-        'OPTIONS': {'init_command': 'SET storage_engine=InnoDB'}
+        #'OPTIONS': {'init_command': 'SET storage_engine=InnoDB'}
     }
 }
 
