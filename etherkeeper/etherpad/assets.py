@@ -2,9 +2,9 @@ from django_assets import Bundle
 
 
 js = Bundle(
-    'etherpad.js'
+    'js/etherpad.js'
 )
 
 css = Bundle(
-    'etherpad.css'
+    'css/etherpad.css'
 )
