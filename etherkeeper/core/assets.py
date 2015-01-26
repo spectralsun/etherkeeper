@@ -20,5 +20,6 @@ css = Bundle(
     'lib/alertify/alertify.default.css',
     'lib/typeahead.css',
     'css/etherkeeper.css',
+    'css/home.css',
     'css/bootstrap.css',
 )
